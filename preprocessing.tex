@@ -1,0 +1,115 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+
+%opening
+\title{Preprocessing}
+\author{}
+
+\begin{document}
+
+\maketitle
+\section{Preprocessing}
+A few easy steps to preprocessing happiness (hopefully)...
+\begin{itemize}
+ \item copy the contents of /scratch/tr332/[username] to your home directory
+ \item add to your ~/.bashrc file the following to the \emph{PATH} variable
+ \begin{itemize}
+   \item /home/\textbf{username}/fmri\_spt/:
+   \item app/fsl/fsl-4.1.7/bin:
+   \item home/\textbf{username}/abin/:
+   \item app/wbic/bin:
+   \item app/wbic/script:
+   \item app/vtkCISG/bin:
+   \item app/vtk/bin:
+   \item app/system/bin:
+   \item app/system/script:
+   \item app/spm/bin:
+   \item app/PETtools/bin:
+   \item app/PETtools/root/bin:
+   \item app0/generic/n1ge6\_1/bin/lx24-x86:
+   \item app/misc/bin:
+   \item app/jvm1.1.7/TalairachDaemon/bin:
+   \item app/jdk1.5.0\_03/bin:
+   \item app/java/bin:
+   \item app/intel/compiler60/ia32/bin:
+   \item app/idl\_8.1/idl/bin/:
+   \item app/fsl/fsl-4.1.2/bin:
+   \item app/fsl/bin:
+   \item app0/i486-pc-linux/freesurfer5/freesurfer-5.0.0/bin:
+   \item app0/i486-pc-linux/freesurfer5/freesurfer-5.0.0/fsfast/bin:
+   \item app/fsl/fsl-4.1.2/bin:
+   \item app0/i486-pc-linux/freesurfer5/freesurfer-5.0.0/mni/bin:
+   \item app0/i486-pc-linux/freesurfer5/freesurfer-5.0.0/bin:
+   \item app/ctn/bin:
+   \item app/camres/bin:
+   \item app/AnalyzeTools/bin:
+   \item app/analyze/BIR/bin:
+   \item app/AIR/bin:
+   \item app/AIR:
+   \item app/AIR/bin:
+   \item app/afni:
+   \item app/abi:
+   \item home/tr332/bin/i486-pc-linux:
+   \item bin:
+   \item usr/bin:
+   \item usr/sbin:
+   \item usr/X11R6/bin:
+   \item .:
+   \item app/jvm1.1.7/BeanShell/scripts:
+   \item app/matlab2008a/bin:
+   \item app/matlab2007b/bin:
+   \item app/matlab7/bin:
+   \item app/matlab2006b/bin:
+   \item app/matlab6/bin:
+   \item app/mpitool:
+   \item app/mricro:
+   \item app/mricron:
+   \item app/rpm:
+   \item app/vnc/bin:
+
+ \end{itemize}
+
+ \item for the \emph{MATLABPATH} variable
+ \begin{itemize}
+  \item /home/tr332/fmri\_spt/code\_bin/:
+  \item /app/abi:
+  \item /app/abi/Plsgui:
+ \end{itemize}
+
+
+ \item restart the terminal!
+ \item for each scan reorientate the images (with fslreorient2std)
+ \item use the newest SPM version for normalisation using and intermediate DARTEL-generated template
+%  add instructions here please!
+ \item run speedypp.py. This will correct for oblique acquisition and do skull stripping, slice timing correction, motion correction, regression out of motion parameters and CSF signal, high-pass filter,  despiking and coregistration.
+%  I've used fairly standard options on the speedypp, except that I hacked the script to use an optimised skull stripping for atrophied brains. You're welcome to try the standard skull strip (remove the --atrophy --betthresh=0.2 options) and give it a go, as PD brains will be less atrophied the my PSP/CBD cohort.
+  I would suggest running this on the grid engine to save time using doSpeedypp.py.
+ \item use the inverse warp generated from the normalisation step to convert to MNI space
+%  \item Non-linear registration using FNIRT to normalise scans to standard space. Before this you need to resample the scans to match your template using 3dresample.
+% As above, I sent this all to the grid engine to deal with! Attached is the doFNIRT.py script
+\end{itemize}
+
+\section{Quality control}
+\begin{itemize}
+ \item Quality control.the resampling may chop off bits of the front of bottom of the brain. If this is the case, you will need to zeropad on the affected side and resample to this template. Look at afni's 3dZeropad to do this (eg 3dZeropad -I 20 --prefix template\_zeropad\_inf.nii template.nii). Then you warp to the original (unzeropadded template). Again, I attached modified script showing you an example.
+
+ \item Excluding by movement. There is a script called fd.sh which extracts framewise displacement for a scan. Unfortunately it requires python packages not on the usual WBIC server. However, I have a virtual server set up called cluster4-0 that has the relevant packages. I will contact the WBIC to get you access to it, or alternatively you can let me know when you need this and I can run the script. It only takes a few seconds.
+\end{itemize}
+
+\section{Parcellation}
+Parcellation is carried out using the script \textit{tsExtractorScript.py}. This script masks the functional scan by both a structural and functional mask, then returns a series of timeseries using fsl commands. Following masking, the script checks the number of voxels in each parcel and proceeeds only if there are more than 10 voxels in the parcel. Otherwise, it returns a line of NA values instead of a timeseries. The final file is tagged with ``\_ts.txt'' and contains ordered timeseries \textbf{in rows}.
+
+Mask generation and timeseries extraction are wrapped in the script \textit{runParcellate\_withgrid.sh} which submits each subject's process individually to the grid engine. This script requires a warp file between the study specific template and MNI space, which can be generated using FNIRT. To save on scratch space, the \textit{runParcellate\_withgrid.sh} script copies each subjects' scans from a data directory to scratch. The paths will need adjusting in the \textit{runParcellate\_withgrid.sh} preamble.
+
+\section{Analysis of Motion}
+Ameera's pipeline includes a number of useful motion correction tools. These are all wrapped in \textit{runMotionCheck.sh} for an individual, and \textit{doCheckMovement.sh} which runs \textit{runMotionCheck.sh} for all subjects by diagnostic group. For each subject the script produces cloud and loess plots, and correlation values for each individual. The motion correction scripts expect timeseries to be arranged in columns and use MATLAB which expects NA values to be coded `NaN', so these changes are made at the beginning of \textit{runMotionCheck.sh}. Part of the analysis is run on cluster4-0 (requiring up-to-date versions of numpy and python). Because of this, subjects are run in series rather than in parallel, however each subject only takes a minute or two.
+
+All these files need transferring locally for generation of montaged images for quality control use (I tend to use Filezilla with a filename filter). The script \textit{QCmontage.py} draws a sagittal view of a subject's functional network and creates a montage with the loess and cloud plots, and histograms of edge lengths and connection strengths. This script depends on the maybrain python package (http://code.google.com/p/maybrain/) to draw the network and histograms. There are some issues with multiple plotting of networks, so it is best to wrap subjects within bash rather than python using \textit{doQCmontages.sh}.
+
+In addition, it is possible to produce a Satterthwaite plot for a whole group using \textit{satterthwaite.py}. This requires access to cluster4-0 to use the python scipy package.
+
+\section{Wavelet correlation}
+Wavelet correlation is based on Sophie Achard's wavebrainer package in R, run in python using rpy2 to link numpy and R. This is set up to use on cluster4-0. Rather than using the default brainwaver functions to write out association matrices, I have written the script to write NA values for blank timeseries.
+
+
+\end{document}
