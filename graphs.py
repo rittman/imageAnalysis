@@ -3,7 +3,7 @@
 Created on Mon Feb 20 14:45:04 2012
 Script for generating adjacency matrices using the brainwaver package for R.
 The input is a timeseries file.
-@author: - tr332@medschl.cam.ac.uk
+@author: - Timothy Rittman tr332@medschl.cam.ac.uk
 """
 
 import csv,os,glob,shutil,operator
