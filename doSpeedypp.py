@@ -1,7 +1,8 @@
 """
 This script is designed to submit analysis of functional images to the grid engine at the WBIC for preprocessing.
 
-The main preprocessing function called is speedypp.py from the signal processing toolbox.
+The main preprocessing function called is speedypp.py from the signal processing toolbox, which should be located
+in your home directory as ~/fmri_spt
 """
 import glob,os
 from os import path
