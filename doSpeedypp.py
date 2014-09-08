@@ -16,16 +16,15 @@ diags = ["Control","PD"] #"Control",
 curDir = os.getcwd()
 
 # Iterate through the diagnostic groups
-for diag in [diags[0]]: #delete [0] when running the test properly, this is just for the test. 
+for diag in diags: 
 	# get a list of all the directories (ie subjects) for each group
-	#dirs = [ v for v in glob.glob(path.join(curDir,diag,"*","*")) if path.isdir(v) ]
-	dirs = ["despiking_test"]
+	dirs = [ v for v in glob.glob(path.join(curDir,diag,"*","*")) if path.isdir(v) ]
 	
 	# iterate through the subject directories
 	for d in dirs:
 		os.chdir(d)  # move in to subject's directory
-		#WBICNum = path.basename(d)
-		WBICNum = "10075"
+		WBICNum = path.basename(path.split(d)[0])
+		print WBICNum
 		f = open("submitScript.sh","wb")  # open a script to submit the preprocessing
 		f.writelines('\n'.join(["#!/bin/bash","#$ -cwd","#$ -l qname=clusterall.q","#$ -M "+email,"#$ -V"])) # headers required for the grid engine
 		f.writelines("\nfslreorient2std "+WBICNum+"_functional.nii "+WBICNum+"_functional_reordered.nii.gz\n") # reorientate the functional image so that it applies skull strip and displays correctly
