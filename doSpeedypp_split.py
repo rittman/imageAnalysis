@@ -23,6 +23,6 @@ for speedyorig in speedyoriglist: #iterating through the list of the bash script
 	speedybeforeWD.close() #close the files of course...
 	speedyafterWD.close()
 	orig.close()
-	system('qsub bash '+path.basename(speedybeforeWD)) #run the new speedy before despiking script straight from here
+	system('qsub bash speedybeforeWD.sh') #run the new speedy before despiking script straight from here
 
 	chdir(curDir) #return back to /scratch/rb729/PDStudy for the iteration through the next participant
