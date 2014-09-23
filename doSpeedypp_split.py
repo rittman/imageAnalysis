@@ -1,6 +1,7 @@
 from os import system,path,getcwd,chdir
 from glob import glob
 
+email="rb729@medschl.cam.ac.uk"
 speedyoriglist = glob('*/*/*/_spp_*_functional_reordered.sh') #this creates a list of all the bash scripts for each participant
 
 curDir = getcwd() #this defines curDir as the current directory which should be /scratch/rb729/PDStudy
@@ -9,7 +10,9 @@ for speedyorig in speedyoriglist: #iterating through the list of the bash script
 	orig = open(speedyorig, 'r') #opening the original bash script
 	chdir(path.split(speedyorig)[0]) #this splits the path of speedyorig so that it only takes the path and not the actual file name. This is achieved using [0]. 
 	speedybeforeWD = open('speedybeforeWD.sh','w') #create the new speedy script which will be used before despiking - w for write
+	speedybeforeWD.writelines('\n'.join(["#!/bin/bash","#$ -cwd","#$ -l qname=clusterall.q","#$ -M "+email,"#$ -V\n"])) # headers required for the grid engine
 	speedyafterWD = open('speedyafterWD.sh','w') #create the new speedz script which will be used after despiking - w for write
+	speedyafterWD .writelines('\n'.join(["#!/bin/bash","#$ -cwd","#$ -l qname=clusterall.q","#$ -M "+email,"#$ -V\n"])) # headers required for the grid engine
 	lines = orig.readlines() #lines is now a variable for each line within the bash script
 	for n,line in enumerate(lines):
 		if '0.020000 99 ' in line:
