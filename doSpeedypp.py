@@ -32,7 +32,7 @@ for diag in diags:
 		f.writelines("\n3dWarp -prefix "+WBICNum+"_structural_reordered_deob.nii.gz -deoblique "+WBICNum+"_structural_reordered.nii.gz\n") # deoblique the structural image
 		
 		# speedypp with options - these may need changing, see signal processing toolbox for details
-		f.writelines("\n~/fmri_spt/speedypp.py -d "+WBICNum+"_functional_reordered.nii.gz -a "+WBICNum+"_structural_reordered.nii.gz -o --rall --tpattern=seqminus --TR=2 --basetime=10 --OVERWRITE\n")
+#		f.writelines("\n~/fmri_spt/speedypp.py -d "+WBICNum+"_functional_reordered.nii.gz -a "+WBICNum+"_structural_reordered.nii.gz -o --rall --tpattern=seqminus --TR=2 --basetime=10 --OVERWRITE\n")
 		
 		# wavelet despiking
 
