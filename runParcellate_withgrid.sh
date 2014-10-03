@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # definitions
-diag=$1
+diag=$1 #what does this mean?
 baseDir=`pwd`
-dataDir=/data/tr332/preprocessing_20130531
-func=functional_reordered_pp_wpd.nii   # functional file warped to study specific template
-struc=structural_reordered_ns_wpd.nii  # structural file warped to study specific template
+dataDir=/scratch/rb729/PDStudy
+func=functional_reordered_pp.nii   # functional file warped to study specific template #are these already warped?
+struc=structural_reordered_ns.nii  # structural file warped to study specific template
 subfile=submitfile.sh
-warp=${baseDir}/${diag}toMNI.nii
+warp=${baseDir}/${diag}toMNI.nii #u-file?
 MNISpace=${baseDir}/MNI152_T1_2mm_brain.nii.gz
 
 # Check if diagnosis directory exists, and create if necessary
@@ -16,7 +16,7 @@ then
   mkdir $diag
 fi
 
-for i in ${dataDir}/${diag}/*
+for i in ${dataDir}/${diag}/*/*
 do
   # check if data directory exists 
   if [ -d $i ]

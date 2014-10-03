@@ -30,6 +30,7 @@ for diag in diags:
 		f.writelines("\nfslreorient2std "+WBICNum+"_functional.nii "+WBICNum+"_functional_reordered.nii.gz\n") # reorientate the functional image so that it applies skull strip and displays correctly
 		f.writelines("\nfslreorient2std "+WBICNum+"_structural.nii "+WBICNum+"_structural_reordered.nii.gz\n") # reorientate structural image
 		f.writelines("\n3dWarp -prefix "+WBICNum+"_structural_reordered_deob.nii.gz -deoblique "+WBICNum+"_structural_reordered.nii.gz\n") # deoblique the structural image
+		f.writelines("\nfslreorient2std "+WBICNum+"_structural_reordered_deob.nii.gz "+WBICNum+"_structural_reordered_deob.nii.gz \n") # reorientate structural image
 		
 		# speedypp with options - these may need changing, see signal processing toolbox for details
 #		f.writelines("\n~/fmri_spt/speedypp.py -d "+WBICNum+"_functional_reordered.nii.gz -a "+WBICNum+"_structural_reordered.nii.gz -o --rall --tpattern=seqminus --TR=2 --basetime=10 --OVERWRITE\n")
@@ -41,5 +42,6 @@ for diag in diags:
 
 
 		f.close() # close submission file
+		#if not path.exists(WBICNum+"_structural_reordered_deob.nii.gz"): #use this line if you need to only run this script for people who do not yet have deob and associated files. if you use this, tab the next line.
 		os.system("qsub submitScript.sh") # submit submision file to the grid engine
 		os.chdir(curDir) # move back to the main directory
