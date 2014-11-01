@@ -1,0 +1,14 @@
+Universe             = vanilla
+Executable           = wrapper.sh
+notification         = never
+
+Requirements = OpSys == "LINUX" && (Arch == "INTEL" || Arch == "X86_64") && ((DEFAULT_PYTHON == "2.6") || (DEFAULT_PYTHON == "2.7"))
+
+transfer_input_files = wrapper.sh, maybrain.tgz, networkx.tgz, bct.tgz, wave_cor_mat_level_2d_100.txt, graphSubjAnalysis.py, parcel_100.txt, community.tgz
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT_OR_EVICT
+
+Output       = job.out
+Log          = job.log
+Error        = job.error
+
