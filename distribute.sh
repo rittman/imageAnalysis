@@ -10,7 +10,7 @@ cm=`readlink -f ../community.tgz`
 curDir=`pwd`
 
 # iterate through subjects
-for i in *
+for i in */*
 do
   if [ -d $i ]
   then
