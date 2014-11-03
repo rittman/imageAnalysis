@@ -11,15 +11,12 @@ from os import path
 import numpy as np
 from scipy import stats,spatial
 
-fdFile="functional_reordered_motion_fd.txt"
-corr="functional_reordered_pp_wpd_MNI500_ts_col_corr.txt"
-locs=argv[2] #"parcel_500_xyz_nolabels_mm.txt"
+fdFile="functional_reordered_motion_fd.txt" #should this be the motion_1D.txt file?
+corr="functional_reordered_pp_wpd_MNI500_ts_col_corr.txt" #this is the result from the parcellation - might have to rename
+locs=argv[2] #"parcel_500_xyz_nolabels_mm.txt"     what is this?
 
 dirName = argv[1]
 subjs = [v for v in glob.glob(path.join(dirName,"*")) if path.isdir(v)]
-
-if "PD/19574" in subjs:
-	subjs.remove("PD/19574")
 
 meanFDs = []
 
