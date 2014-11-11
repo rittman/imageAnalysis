@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Dec 23 00:18:58 2012
-
 @author: tim
 """
 
-from maybrain import mayBrainTools as mbt
-from maybrain import mayBrainExtraFns as extras
+from maybrain import brainObjs as mbt 
+from maybrain import extraFns as extras
 import bct
 import numpy as np
 
@@ -29,17 +27,22 @@ for e in edgePCCons:
     ofb = '_'.join(["brain", thresholdtype, str(e), "d"+dVal+"_"])
     propDict = {"edgePC":str(e)}
 
-    a.importAdjFile(adjMatFile, delimiter=delim, excludedNodes=excludedNodes)
+    a.importAdjFile(adjMatFile, delimiter=delim, exclnodes=excludedNodes)
     a.localThresholding(edgePC=e)
     a.removeUnconnectedNodes()
     
     degs = a.G.degree(weight='weight')
     extras.writeResults(degs, "degreeWt", ofb, append=appVal)
 
+    print mbt.nx.is_connected(a.G)
     a.binarise()
+    print mbt.nx.is_connected(a.G)
     a.importSpatialInfo(parcelFile)  # read spatial information
+    print mbt.nx.is_connected(a.G)
     a.weightToDistance()
+    print mbt.nx.is_connected(a.G)
     a.makebctmat()    
+    print mbt.nx.is_connected(a.G)
    
     #### small worldness metrics ####
     degs = mbt.nx.degree(a.G)
@@ -125,11 +128,10 @@ for e in edgePCCons:
     appVal = True
 
 # weighted measures
-a.importAdjFile(adjMatFile, delimiter=delim, excludedNodes=excludedNodes)
+a.importAdjFile(adjMatFile, delimiter=delim, exclnodes=excludedNodes)
 a.applyThreshold()
 a.removeUnconnectedNodes()
 
-##a.adjMatThresholding(MST=False)
 a.weightToDistance()
 ofb = '_'.join(["brain", "d"+dVal+"_"])
 appVal = False
