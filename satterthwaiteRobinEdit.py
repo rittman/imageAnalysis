@@ -10,7 +10,6 @@ import glob
 from os import path
 import numpy as np
 from scipy import stats,spatial
-from numpy import genfromtxt
 
 OfdFile="functional_reordered_motion_fd.txt" #should this be the motion_1D.txt file?
 Ocorr="functional_reordered_pp_cl500_ts_col.txt" #"functional_reordered_pp_wpd_MNI500_ts_col_corr.txt" #this is the result from the parcellation - might have to rename
@@ -66,8 +65,8 @@ for subj in subjs:
     print corr
     print path.join(subj + "/" + cond + "/" + corr)
     
-    gen = genfromtxt(path.join(subj + "/"+ cond + "/" + corr))
-    mat = np.loadtxt(gen)    
+    mat = np.genfromtxt(path.join(subj + "/"+ cond + "/" + corr))
+#    mat = np.loadtxt(gen)    
 
 
     if np.isnan(mat[0,0]):
