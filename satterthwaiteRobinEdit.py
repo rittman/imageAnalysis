@@ -10,9 +10,10 @@ import glob
 from os import path
 import numpy as np
 from scipy import stats,spatial
+from numpy import genfromtxt
 
-fdFile="functional_reordered_motion_fd.txt" #should this be the motion_1D.txt file?
-corr="functional_reordered_pp_wpd_MNI500_ts_col_corr.txt" #this is the result from the parcellation - might have to rename
+OfdFile="functional_reordered_motion_fd.txt" #should this be the motion_1D.txt file?
+Ocorr="functional_reordered_pp_cl500_ts_col.txt" #"functional_reordered_pp_wpd_MNI500_ts_col_corr.txt" #this is the result from the parcellation - might have to rename
 locs=argv[2] #"parcel_500_xyz.txt"     what is this?
 
 dirName = argv[1]
@@ -22,15 +23,28 @@ meanFDs = []
 
 # collate mean FD values for individuals
 for subj in subjs:
-    if path.exists(path.join(subj, fdFile)):
+    
+
+    WBIC = path.split(subj)[1]
+    #print WBIC
+    fdFile = path.join(WBIC + "_" + OfdFile)
+    #print fdFile
+    cond = argv[3]
+    #print cond
+    #print path.join(subj + "/" + cond, fdFile)
+
+
+
+    if path.exists(path.join(subj + "/" + cond + "/" + fdFile)):
         print subj
-        fdVals = np.loadtxt(path.join(subj, fdFile))
+	print "A"
+        fdVals = np.loadtxt(path.join(subj + "/" + cond + "/" + fdFile))
         fdVals = np.ma.array(fdVals, mask=np.isnan(fdVals))
         print subj + ' '+ str(np.mean(fdVals))
         meanFDs.append(np.mean(fdVals))
         
     else:
-        print(subj + " " + fdFile + " doesn't exist")
+        print(subj + "/" + cond, fdFile + " doesn't exist")
         subjs.remove(subj)
 
 FDfile = open(path.join(dirName, "meanFD.txt"),"w")
@@ -44,7 +58,18 @@ print(len(subjs))
 # extract subject connectivity values by node pair
 assocMat = np.memmap(path.join(dirName,"assocMatAll.txt"), mode="w+", shape=(500,500,len(subjs)), dtype='float32')
 for subj in subjs:
-    mat = np.loadtxt(path.join(subj,corr))
+    
+    WBIC = path.split(subj)[1]
+    print WBIC
+    cond = argv[3]
+    corr = path.join("sw" + WBIC + "_" + Ocorr)
+    print corr
+    print path.join(subj + "/" + cond + "/" + corr)
+    
+    gen = genfromtxt(path.join(subj + "/"+ cond + "/" + corr))
+    mat = np.loadtxt(gen)    
+
+
     if np.isnan(mat[0,0]):
     	print subj+ "has NA values"
     assocMat[:,:,subjs.index(subj)]=mat
