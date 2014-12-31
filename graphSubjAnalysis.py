@@ -9,9 +9,15 @@ import bct
 import numpy as np
 
 edgePCCons = [v for v in range(1,11)]
+
+# excluded nodes for Robin's analysis
 excludedNodes = [309, 393, 119, 275, 152, 370, 303, 80, 339, 131,
                  355, 250, 296, 491, 423, 140, 205, 434, 26, 244,
                  21, 142, 493, 76, 232, 234, 422]
+                 
+# excluded nodes for Tim's original analysis
+#excludedNodes = [28, 303, 355, 339, 131, 250, 491, 205, 423, 140, 434, 142, 235,
+#                 244, 493, 21, 26, 232, 76, 234, 422] # nodes with insufficient coverage
                  
 parcelFile = "parcel_500_xyz.txt"
 thresholdtype = "local"
