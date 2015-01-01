@@ -13,7 +13,7 @@ import csv
 # class definition
 
 class metricObj:
-    def __init__(self, dVal, diag, cond):
+    def __init__(self, dVal, diag, cond=None):
         # define wavelet scale
         self.dVal = "d"+str(dVal)
         
@@ -22,7 +22,11 @@ class metricObj:
         self.cond = cond        
         
         # get subject list
-        self.subjList = [ v for v in glob(path.join(diag, "*", cond)) if path.isdir(v) ]
+        if self.cond:
+            self.subjList = [ v for v in glob(path.join(diag, "*", cond)) if path.isdir(v) ]
+        else:
+            self.subjList = [ v for v in glob(path.join(diag, "*")) if path.isdir(v) ]
+            
         self.subjList = [ v for v in self.subjList if not 'excluded' in v ]
         
     def collate(self,
@@ -31,7 +35,11 @@ class metricObj:
                 thresholdtype="local"):
                 
         # prepare output file
-        outFile = path.join(self.diag, '_'.join([self.cond, self.dVal, metricroot, thresholdtype]))
+        if self.cond:
+            outFile = path.join(self.diag, '_'.join([self.cond, self.dVal, metricroot, thresholdtype]))
+        else:
+            outFile = path.join(self.diag, '_'.join([self.dVal, metricroot, thresholdtype]))
+
         out = open(outFile, "wb")
         
         o = csv.DictWriter(out, fieldnames=None ,delimiter=" ")
