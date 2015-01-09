@@ -19,10 +19,10 @@ excludedNodes = [309, 393, 119, 275, 152, 370, 303, 80, 339, 131,
 #excludedNodes = [28, 303, 355, 339, 131, 250, 491, 205, 423, 140, 434, 142, 235,
 #                 244, 493, 21, 26, 232, 76, 234, 422] # nodes with insufficient coverage
                  
-parcelFile = "parcel_500_xyz.txt"
+parcelFile = "parcel_500.txt"
 thresholdtype = "local"
 dVal = "2"
-adjMatFile = "wave_cor_mat_level_"+dVal+"d_500.txt" #  =  "mean_2d_500.txt"
+adjMatFile = "wave_cor_mat_level_"+dVal+"d_500_z.txt" #  =  "mean_2d_500.txt"
 delim=" "
 
 a = mbt.brainObj()
@@ -53,10 +53,14 @@ for e in edgePCCons:
     #### small worldness metrics ####
     degs = mbt.nx.degree(a.G)
     extras.writeResults(degs, "degree", ofb, propDict=propDict, append=appVal)
-        
-    clustCoeff = mbt.nx.average_clustering(a.G)
+
+    cc = mbt.nx.clustering(a.G)
+    extras.writeResults(cc, "cc", ofb, propDict=propDict, append=appVal)
+
+    clustCoeff = np.mean(cc.values())
     extras.writeResults(clustCoeff, "clusterCoeff", ofb, propDict=propDict, append=appVal)
     del(clustCoeff)
+    del(cc)
     
     pl = mbt.nx.average_shortest_path_length(a.G)
     extras.writeResults(pl, "pl", ofb, propDict=propDict, append=appVal)
@@ -76,10 +80,6 @@ for e in edgePCCons:
     
     closeCent = mbt.nx.centrality.closeness_centrality(a.G)
     extras.writeResults(closeCent, "closeCent", ofb, propDict=propDict, append=appVal)
-     
-#    hs = extras.hubscore(a.G, bc=betCent, cc=closeCent, degs=degs, weighted=False)
-#    extras.writeResults(hs, "hs", ofb, propDict=propDict, append=appVal)
-#    del(hs, betCent, closeCent, degs)
      
     try:
         eigCent = mbt.nx.centrality.eigenvector_centrality_numpy(a.G)
@@ -126,6 +126,7 @@ for e in edgePCCons:
     rc = mbt.nx.rich_club_coefficient(a.G, normalized=False)
     extras.writeResults(rc, "rcCoeff", ofb, propDict=propDict, append=appVal)
     del(rc)
+
     # robustness
     rbt = a.robustness()
     extras.writeResults(rbt, "robustness", ofb, propDict=propDict, append=False)
@@ -154,10 +155,6 @@ extras.writeResults(betCent, "betCent_wt", ofb, append=appVal)
 closeCent = mbt.nx.centrality.closeness_centrality(a.G, distance='distance')
 extras.writeResults(closeCent, "closeCent_wt", ofb, append=appVal)
 
-#hs = extras.hubscore(a.G, bc=betCent, cc=closeCent, degs=degs, weighted=True)
-#extras.writeResults(hs, "hubscores_wt", ofb, append=appVal)
-#del(hs, betCent)
-
 eigCent = mbt.nx.centrality.eigenvector_centrality_numpy(a.G)
 extras.writeResults(eigCent, "eigCentNP_wt", ofb, append=appVal)
 del(eigCent)
@@ -177,9 +174,13 @@ wmd = extras.withinModuleDegree(a.G, ciN, weight='weight')
 extras.writeResults(wmd, "wmd", ofb, append=appVal)
 del wmd
 
-clustCoeff = mbt.nx.average_clustering(a.G, weight="weight")
+cc = mbt.nx.clustering(a.G, weight="weight")
+extras.writeResults(cc, "cc_wt", ofb, append=appVal)
+
+clustCoeff = np.average(cc.values())
 extras.writeResults(clustCoeff, "clusterCoeff_wt", ofb, append=appVal)
 del(clustCoeff)
+del(cc)
 
 pl = mbt.nx.average_shortest_path_length(a.G, weight="distance")
 extras.writeResults(pl, "pl_wt", ofb, append=appVal)
@@ -190,7 +191,7 @@ extras.writeResults(ge, "ge_wt", ofb, append=appVal)
 del(ge)
 
 le = extras.localefficiency(a.G, weight="distance")
-extras.writeResults(le, "leN_wt", ofb, append=appVal)
+extras.writeResults(le, "le_wt", ofb, append=appVal)
 del(le)
 
 pcCent = np.zeros((len(a.G.nodes()), 10))
@@ -256,9 +257,4 @@ del(nM)
 wmd = a.assignbctResult(np.mean(wmd, axis=1))
 extras.writeResults(wmd, "wmdWt_wt", ofb, append=appVal)
 del(wmd)
-
-
-#hs = extras.hubscore(a.G, bc=betCentT, cc=closeCent, degs=degs, weighted=True)
-#extras.writeResults(hs, "hsT_wt", ofb, append=appVal)
-#del(hs, betCentT)
 
