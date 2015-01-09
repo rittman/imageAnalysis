@@ -37,7 +37,7 @@ rtoz <- function(dName, wf="wave_cor_mat_level_2d_500.txt"){
 
 }
 
-# dirList = c("PSP", "CBS") #"Control", "PD", 
+dirList = c("Control", "PD") 
 for(d in dirList){
   lapply(list.dirs(d, recursive = TRUE), rtoz)
 }
