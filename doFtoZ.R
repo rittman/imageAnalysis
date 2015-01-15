@@ -17,7 +17,7 @@ rtoz <- function(dName, wf="wave_cor_mat_level_2d_500.txt"){
     print(fname)
     
     # import file
-    aa = read.table(fname, na.strings = "NaN")
+    aa = read.table(fname, na.strings = c("NaN", "NA"))
     
     # set output name
     out = paste(strsplit(fname,"\\.")[[1]][1],
