@@ -1,7 +1,13 @@
-from maybrain import mayBrainTools as mbt
-from maybrain import mayBrainExtraFns as extras
+# -*- coding: utf-8 -*-
+"""
+@author: tim
+"""
+
+from maybrain import brainObjs as mbt 
+from maybrain import extraFns as extras
 import bct
 
+edgePCCons = [v for v in range(1,11)]
 def metrics(a,
             appVal,
             degenName,
@@ -14,13 +20,12 @@ def metrics(a,
     appValT = appVal
 
 
-#    # prepare matrices for weighted measures
+    # prepare matrices for weighted measures
 #    pcCent = mbt.np.zeros((len(a.G.nodes()), 10))
     betCentT = mbt.np.zeros((len(a.G.nodes()), 10))
 #    nM = mbt.np.zeros((10))
 #    wmd = mbt.np.zeros((len(a.G.nodes()), 10))
-    
-    
+                 
 #    pcCentNm = mbt.np.zeros((len(a.G.nodes()), 10))
 #    nMNm = mbt.np.zeros((10))
 #    wmdNm = mbt.np.zeros((len(a.G.nodes()), 10))    
@@ -31,6 +36,7 @@ def metrics(a,
         ofb = '_'.join(["brain", degenName, thresholdtype, str(e), "d"+dVal+"_"])
 
         a.localThresholding(edgePC=e)
+        a.removeUnconnectedNodes()
         a.makebctmat()
         a.weightToDistance()
 
@@ -99,13 +105,15 @@ def metrics(a,
         
         #### small worldness metrics ####
         degs = mbt.nx.degree(a.G)
-        extras.writeResults(degs, "degree", ofb, propDict=propDict,
-                            append=appVal)
-        
-        clustCoeff = mbt.nx.average_clustering(a.G)
-        extras.writeResults(clustCoeff, "clusterCoeff", ofb, propDict=propDict,
-                            append=appVal)
-        del(clustCoeff)
+        extras.writeResults(degs, "degree", ofb, propDict=propDict, append=appVal)
+    
+        cc = mbt.nx.clustering(a.G)
+        extras.writeResults(cc, "cc", ofb, propDict=propDict, append=appVal)
+            
+        clustCoeff = np.mean(cc.values())
+        extras.writeResults(clustCoeff, "clusterCoeff", ofb, propDict=propDict, append=appVal)
+            del(clustCoeff)
+        del(cc)
         
         pl = mbt.nx.average_shortest_path_length(a.G)
         extras.writeResults(pl, "pl", ofb, propDict=propDict, append=appVal)
@@ -120,21 +128,14 @@ def metrics(a,
         del(le)
     
         # hub metrics
-        betCent = mbt.centrality.betweenness_centrality(a.G)
-        extras.writeResults(betCent, "betCent", ofb, propDict=propDict,
-                            append=appVal)
-        
-        closeCent = mbt.centrality.closeness_centrality(a.G)
-        extras.writeResults(closeCent, "closeCent", ofb, propDict=propDict,
-                            append=appVal)
-         
-        hs = extras.hubscore(a.G, bc=betCent, cc=closeCent, degs=degs,
-                             weighted=False)
-        extras.writeResults(hs, "hs", ofb, propDict=propDict, append=appVal)
-        del(hs, betCent, closeCent, degs)
+        betCent = mbt.nx.centrality.betweenness_centrality(a.G)
+        extras.writeResults(betCent, "betCent", ofb, propDict=propDict, append=appVal)
+            
+        closeCent = mbt.nx.centrality.closeness_centrality(a.G)
+        extras.writeResults(closeCent, "closeCent", ofb, propDict=propDict, append=appVal)
          
         try:
-            eigCent = mbt.centrality.eigenvector_centrality_numpy(a.G)
+        eigCent = mbt.nx.centrality.eigenvector_centrality_numpy(a.G)
         except:
             eigCent = dict(zip(a.G.nodes(), ['NA' for n in a.G.nodes()]))
         extras.writeResults(eigCent, "eigCentNP", ofb, propDict=propDict,
@@ -213,7 +214,7 @@ def metrics(a,
     
     propDict = {"pcLoss":pcLoss}
     # weighted measures
-    a.adjMatThresholding(MST=False)
+
     a.weightToDistance()
     ofb = '_'.join(["brain", degenName, "d"+dVal+"_"])
     a.makebctmat()

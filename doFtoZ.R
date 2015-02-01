@@ -41,5 +41,3 @@ dirList = c("Control", "PD")
 for(d in dirList){
   lapply(list.dirs(d, recursive = TRUE), rtoz)
 }
-
-
