@@ -110,9 +110,9 @@ def metrics(a,
         cc = mbt.nx.clustering(a.G)
         extras.writeResults(cc, "cc", ofb, propDict=propDict, append=appVal)
             
-        clustCoeff = np.mean(cc.values())
+        clustCoeff = mbt.np.mean(cc.values())
         extras.writeResults(clustCoeff, "clusterCoeff", ofb, propDict=propDict, append=appVal)
-            del(clustCoeff)
+        del(clustCoeff)
         del(cc)
         
         pl = mbt.nx.average_shortest_path_length(a.G)
@@ -135,7 +135,7 @@ def metrics(a,
         extras.writeResults(closeCent, "closeCent", ofb, propDict=propDict, append=appVal)
          
         try:
-        eigCent = mbt.nx.centrality.eigenvector_centrality_numpy(a.G)
+            eigCent = mbt.nx.centrality.eigenvector_centrality_numpy(a.G)
         except:
             eigCent = dict(zip(a.G.nodes(), ['NA' for n in a.G.nodes()]))
         extras.writeResults(eigCent, "eigCentNP", ofb, propDict=propDict,
