@@ -35,7 +35,7 @@ for fName in fNames:
         g = open(path.join("dir_"+str(i),"allValues.txt"), "ab")
         writer = csv.writer(g, delimiter=",")
 	l = reader.next()
-        line = [v if v!="nan" else 0 for v in l]
+        line = [v if v not in ["NA", "NaN"] else 0 for v in l]
         writer.writerow(line)
         del(line)
         g.close()
