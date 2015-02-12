@@ -78,7 +78,7 @@ b = mbp.plotObj()
 b.plotBrainEdges(a, opacity=0.7, lw=3.) #, scalars=weights
 
 #plot the brain nodes
-b.plotBrainCoords(a, col=(0.,0.,1.), sizeList = sizeList, opacity=0.5, sf=4.)
+b.plotBrainCoords(a, col=(0.,0.,1.), sizeList = sizeList, opacity=0.5) #, sf=4.
 
 # plot the background MNI space
 b.plotSkull(a, contourVals = [3000,9000])
