@@ -48,22 +48,21 @@ edgePC = 3
 # create a brain object, import an adjacency matrix and apply a threshold
 a = mbt.brainObj()
 a.importAdjFile(path.join(d, assMat), delimiter=delim)
-a.applyThreshold()
+#a.applyThreshold()
+
+# apply a local threshold
+a.localThresholding(edgePC=edgePC)
+#weights = [weightDict[e]+1.0 for e in a.G.edges()]
+#weights = [power(v,4)*v for v in weights]
 a.removeUnconnectedNodes()
 
 # get the connection strength 
 cc = mbt.nx.clustering(a.G)  #mbt.nx.degree(a.G, weight='weight')
 #weightDict = {e:a.G.edge[e[0]][e[1]]['weight'] for e in a.G.edges()}
 
-
-# apply a local threshold
-a.localThresholding(edgePC=edgePC)
-#weights = [weightDict[e]+1.0 for e in a.G.edges()]
-#weights = [power(v,4)*v for v in weights]
-
 # fudge the sizes a bit so there is more of a contrast, ie take the square
-sizeList = [power(cc[v],2) for v in a.G.nodes()]
-
+sizeList = [power(float(cc[v]),2) for v in a.G.nodes()]
+print sizeList
 
 # import the spatial file
 a.importSpatialInfo(spatFile)
@@ -75,7 +74,7 @@ a.importBackground("avg152T1_brain.nii")
 b = mbp.plotObj()
 
 # plot the brain edges
-b.plotBrainEdges(a, opacity=0.7, lw=3.) #, scalars=weights
+b.plotBrainEdges(a, opacity=0.5, lw=3.) #, scalars=weights
 
 #plot the brain nodes
 b.plotBrainCoords(a, col=(0.,0.,1.), sizeList = sizeList, opacity=0.5) #, sf=4.
