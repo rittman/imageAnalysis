@@ -44,7 +44,7 @@ class individual:
         
         self.timeseries = filename
 	
-    def waveletDecomp(self, headerBool=False, Rtimeseries=None, removeNAlines=True):
+    def waveletDecomp(self, headerBool=False, Rtimeseries=None, removeNAlines=True, rotate=None):
         """
         Calculates and draw adjacency matrices
         """
@@ -59,7 +59,7 @@ class individual:
         lines = [v for v in lines]
         rows = len(lines)
         cols = len(lines[0].split())
-        print ' '.join([str(rows),str(cols)])
+        print ' '.join(["Rows:",str(rows),"Columns:",str(cols)])
         f.close()
         
         self.fileNameBase= "d_"+str(cols)
@@ -70,7 +70,11 @@ class individual:
         print "Missing columns: "+' '.join([str(v) for v in missing[0]])
         
         if removeNAlines:
-            self.adjmats = brainwaver.const_cor_list(base.as_matrix(ts),export_data=False)  # construct correlation matrices using wavelet decomposition
+	    if rotate:
+	        self.adjmats = brainwaver.const_cor_list(base.t(base.as_matrix(ts)),export_data=False)  # construct correlation matrices using wavelet decomposition
+
+            else:
+	        self.adjmats = brainwaver.const_cor_list(base.as_matrix(ts),export_data=False)  # construct correlation matrices using wavelet decomposition
             
             for n,mat in enumerate(self.adjmats):
                 mat = np.array(mat)
@@ -93,7 +97,11 @@ class individual:
 
         
         else:
-            self.adjmats = brainwaver.const_cor_list(base.as_matrix(ts),export_data=True)  # construct correlation matrices using wavelet decomposition
+	    if rotate:
+	        self.adjmats = brainwaver.const_cor_list(base.t(base.as_matrix(ts)),export_data=True)  # construct correlation matrices using wavelet decomposition
+
+            else:
+	        self.adjmats = brainwaver.const_cor_list(base.as_matrix(ts),export_data=True)  # construct correlation matrices using wavelet decomposition
 
             for i in range(1,5):
                 for wavedecomp in glob.glob(os.path.join(self.dir,'wave_cor_*'+str(i)+'.txt')):
