@@ -44,7 +44,7 @@ class individual:
         
         self.timeseries = filename
 	
-    def waveletDecomp(self, headerBool=False, Rtimeseries=None, removeNAlines=True, rotate=None):
+    def waveletDecomp(self, headerBool=False, Rtimeseries=None, removeNAlines=True):
         """
         Calculates and draw adjacency matrices
         """
@@ -59,13 +59,10 @@ class individual:
         lines = [v for v in lines]
         rows = len(lines)
         cols = len(lines[0].split())
-        print ' '.join(["Rows:",str(rows),"Columns:",str(cols)])
+        print ' '.join([str(rows),str(cols)])
         f.close()
         
-	if rotate:
-            self.fileNameBase= "d_"+str(rows)
-	else:
-            self.fileNameBase= "d_"+str(cols)
+        self.fileNameBase= "d_"+str(cols)
         
         ts = np.genfromtxt(self.timeseries, missing_values="NA", filling_values=999.)
 
@@ -73,11 +70,7 @@ class individual:
         print "Missing columns: "+' '.join([str(v) for v in missing[0]])
         
         if removeNAlines:
-	    if rotate:
-	        self.adjmats = brainwaver.const_cor_list(base.t(base.as_matrix(ts)),export_data=False)  # construct correlation matrices using wavelet decomposition
-
-            else:
-	        self.adjmats = brainwaver.const_cor_list(base.as_matrix(ts),export_data=False)  # construct correlation matrices using wavelet decomposition
+            self.adjmats = brainwaver.const_cor_list(base.as_matrix(ts),export_data=False)  # construct correlation matrices using wavelet decomposition
             
             for n,mat in enumerate(self.adjmats):
                 mat = np.array(mat)
@@ -100,11 +93,7 @@ class individual:
 
         
         else:
-	    if rotate:
-	        self.adjmats = brainwaver.const_cor_list(base.t(base.as_matrix(ts)),export_data=True)  # construct correlation matrices using wavelet decomposition
-
-            else:
-	        self.adjmats = brainwaver.const_cor_list(base.as_matrix(ts),export_data=True)  # construct correlation matrices using wavelet decomposition
+            self.adjmats = brainwaver.const_cor_list(base.as_matrix(ts),export_data=True)  # construct correlation matrices using wavelet decomposition
 
             for i in range(1,5):
                 for wavedecomp in glob.glob(os.path.join(self.dir,'wave_cor_*'+str(i)+'.txt')):
