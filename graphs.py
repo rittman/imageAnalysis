@@ -62,7 +62,10 @@ class individual:
         print ' '.join(["Rows:",str(rows),"Columns:",str(cols)])
         f.close()
         
-        self.fileNameBase= "d_"+str(cols)
+	if rotate:
+            self.fileNameBase= "d_"+str(rows)
+	else:
+            self.fileNameBase= "d_"+str(cols)
         
         ts = np.genfromtxt(self.timeseries, missing_values="NA", filling_values=999.)
 

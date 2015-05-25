@@ -16,7 +16,7 @@ tf = "tempScript.sh"
 numCols=None
 
 #parcel = "/home/tr332/fmri_spt/templates/parcel_temps/parcel_"+x+".nii"
-parcel = "/home/tr332/fmri_spt/templates/atlas/aaltoMNI.nii.gz"
+parcel = "/home/tr332/fmri_spt/templates/atlas/ROI_MNI_V4_newValues.nii.gz"
 outfile = fScan.replace(".nii.gz", str(x)+"_ts.txt")
 
 # copy parcel file locally
