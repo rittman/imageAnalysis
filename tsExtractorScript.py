@@ -15,8 +15,9 @@ pf = "parcelMean.txt"
 tf = "tempScript.sh"
 numCols=None
 
-parcel = "/home/tr332/fmri_spt/templates/parcel_temps/parcel_"+x+".nii"
-outfile = fScan.replace(".nii.gz", x+"_ts.txt")
+#parcel = "/home/tr332/fmri_spt/templates/parcel_temps/parcel_"+x+".nii"
+parcel = "/home/tr332/fmri_spt/templates/atlas/ROI_MNI_V4_newValues.nii.gz"
+outfile = fScan.replace(".nii.gz", str(x)+"_ts.txt")
 
 # copy parcel file locally
 copy(parcel, path.basename(parcel))
@@ -27,9 +28,9 @@ f = open(outfile, "w")
 f.close()
 
 l = []
-# mask parcel file by input mask
-l.append(' '.join([path.join(FSLDIR, "fslchfiletype"), "NIFTI_GZ", parcel]))
-parcel = parcel+'.gz'
+## mask parcel file by input mask
+#l.append(' '.join([path.join(FSLDIR, "fslchfiletype"), "NIFTI_GZ", parcel]))
+#parcel = parcel+'.gz'
 
 l.append(' '.join([path.join(FSLDIR, "fslmaths"), parcel, "-mas", mask1, "-mas", mask2, parcel]))
 t = open(tf,"w")
