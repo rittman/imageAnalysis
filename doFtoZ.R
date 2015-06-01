@@ -9,7 +9,7 @@
 
 library(psych)
 
-rtoz <- function(dName, wf="wave_cor_mat_level_2d_500.txt"){
+rtoz <- function(dName, wf="wave_cor_mat_level_2d_116.txt"){
   # get filename
   fname = paste(dName,wf,sep="/")
   
@@ -37,7 +37,8 @@ rtoz <- function(dName, wf="wave_cor_mat_level_2d_500.txt"){
 
 }
 
-dirList = c("Control", "PD") 
+# set the list of diagnoses, the script below searches recursively for directories within each diagnosis directory
+dirList = c("Control", "PD", "PSP", "CBS") 
 for(d in dirList){
   lapply(list.dirs(d, recursive = TRUE), rtoz)
 }
