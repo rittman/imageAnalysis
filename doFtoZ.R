@@ -9,7 +9,7 @@
 
 library(psych)
 
-rtoz <- function(dName, wf="wave_cor_mat_level_2d_116.txt"){
+rtoz <- function(dName, wf="wave_cor_mat_level_2d_500.txt"){
   # get filename
   fname = paste(dName,wf,sep="/")
   
@@ -17,15 +17,22 @@ rtoz <- function(dName, wf="wave_cor_mat_level_2d_116.txt"){
     print(fname)
     
     # import file
-    aa = read.table(fname, na.strings = c("NaN", "NA"))
+    aa = read.table(fname, na.strings = c("NaN", "NA", "nan"))
     
     # set output name
-    out = paste(strsplit(fname,"\\.")[[1]][1],
+    out = paste(".",strsplit(fname,"\\.")[[1]][2],
                 "_z", ".txt", sep="")
+    print(out)
     
     # set diagonal to NA
-    diag(aa) <- NA
-    
+    for(x in seq(length(aa[1,]))){
+     for(y in seq(length(aa[,1]))){
+      if(x == y){
+       aa[x,y] = NA
+      }
+     }
+    }
+ 
     # do Fisher's r to z transform
     bb = fisherz(aa)
     
@@ -38,7 +45,5 @@ rtoz <- function(dName, wf="wave_cor_mat_level_2d_116.txt"){
 }
 
 # set the list of diagnoses, the script below searches recursively for directories within each diagnosis directory
-dirList = c("Control", "PD", "PSP", "CBS") 
-for(d in dirList){
-  lapply(list.dirs(d, recursive = TRUE), rtoz)
-}
+print(list.dirs())
+lapply(list.dirs(), rtoz)
