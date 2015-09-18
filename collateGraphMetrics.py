@@ -72,18 +72,21 @@ class metricObj:
                     # assign values to output dictionary
                     for l in reader:
                         l["edgePC"] = eH
-                        l["wbic"]  = path.basename(subj)
-                        l["gene"]  = subjDict[subj]["gene"]
-                        l["GS"]    = subjDict[subj]["GS"]
+                        l["site"]   = subjDict[subj]["Site"]
+                        l["wbic"]   = path.basename(subj)
+                        l["gene"]   = subjDict[subj]["gene"]
+                        l["GS"]     = subjDict[subj]["GS"]
+                        l["Family"] = subjDict[subj]["Family"]
                         
                         if not o.fieldnames:
-                            headers = ["wbic", "gene", "GS"]
+                            headers = ["wbic", "gene", "GS", "site", "Family"]
+                            headNum = len(headers)+2
                             headers.extend(reader.fieldnames)
                             if not 'edgePC' in headers:
                                 headers.insert(0, 'edgePC')
                             
                             
-                            if len(headers) > 5:
+                            if len(headers) > headNum:
                                 headers = headers[:headers.index('0')]
                                 headers.extend([str(v) for v in range(500)])
                             
@@ -108,8 +111,10 @@ f = open(inFile, "rb")
 reader = csv.DictReader(f, delimiter="\t")
 subjDict = {}
 for l in reader:
-    subjDict[l["Subject"]] = {"gene":l["Gene"], 
-                              "GS":l["GS"]}
+    subjDict[l["Subject"]] = {"gene":l["Gene"],
+                              "GS":l["GS"],
+                              "Site":l["Site"],
+                              "Family":l["Fam no"]}
 
 for thresholdtype in ["local"]:    
     a = metricObj(d)
