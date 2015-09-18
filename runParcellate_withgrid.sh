@@ -1,36 +1,30 @@
 #!/bin/bash
 # Run this script specifying the diagnosis, eg runParcellate_withgrid Control
 # definitions
-diag=$1 #what does this mean?
 baseDir=`pwd`
-dataDir=/data/rb729/parcellatetest
-funcT=_functional_reordered_pp_cl.nii # functional file warped to study specific template
-strucT=_structural_reordered_deob.nii # structural file warped to study specific template
+dataDir=/data/tr332/GENFI_20150525
+funcT=functional_reordered_pp_thld10_wds_corr.nii.gz # functional file warped to study specific template
+strucT=structural_struc_brain.nii.gz # structural file warped to study specific template
 subfile=submitfile.sh
-tsScript=/home/rb729/github_repos/imageAnalysis/tsExtractorScript.py
+tsScript=/home/tr332/pythonLib/imageAnalysis/tsExtractorScript.py
 #warp=${baseDir}/${diag}toMNI.nii
 #MNISpace=${baseDir}/MNI152_T1_2mm_brain.nii.gz
 
-# Check if diagnosis directory exists, and create if necessary
-if [ ! -d $diag ]
-then
-  mkdir $diag
-fi
-
-for i in ${dataDir}/${diag}/*/* # adjusted to search subdirectories, eg placebo/citalopram
+for i in ${dataDir}/* # 
 do
   # check if data directory exists 
   if [ -d $i ]
   then  
 
     # define local directory
-    i=${diag}/${i##*$diag\/} 
+    i=${i##*\/} 
+    echo $i
     
     # get WBIC number
-    w=${i##$diag\/} 
-    w=${w%%\/*}
-    func=sw${w}${funcT}
-    struc=sw${w}${strucT}
+    w=$i
+    func=${funcT}
+    struc=${strucT}
+    echo $func
 
     # check if structural file exists
     if [ -e $dataDir/${i}/${struc} ]
@@ -39,7 +33,7 @@ do
       echo $i
       if [ ! -d $i ]
       then
-        mkdir -p $i
+        mkdir $i
       fi
       
       # switch to subject directory
@@ -49,11 +43,6 @@ do
       cp $dataDir/${i}/${struc} .
       cp $dataDir/${i}/${func} .
 
-      # change file type
-      fslchfiletype NIFTI_GZ ${struc}
-      struc=${struc}.gz
-      fslchfiletype NIFTI_GZ ${func}
-      func=${func}.gz
       echo `ls`
       
       ### write functions to submit script ###
@@ -82,7 +71,7 @@ do
     
     else
       # if structural scan not present, make a note in the log
-      echo -e "$i $dataDir/${i}/${struc}\n" >> ${diag}_log.txt
+      echo -e "$i $dataDir/${i}/${struc}\n" >> log.txt
     fi
   fi
 done
