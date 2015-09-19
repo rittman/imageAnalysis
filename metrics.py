@@ -278,27 +278,27 @@ def metrics(a,
         # append any further iterations
         appVal = True
     
-    propDict = {"pcLoss":pcLoss}
-    # weighted measures
-
-    a.weightToDistance()
-    ofb = '_'.join(["brain", degenName, "d"+dVal+"_"])
-    a.makebctmat()
-    
-    # weighted hub metrics
-    degs = a.G.degree(weight='weight')
-    extras.writeResults(degs, "degree_wt", ofb, propDict=propDict, append=appValW)
-    
-    betCent = mbt.centrality.betweenness_centrality(a.G, weight='distance')
-    extras.writeResults(betCent, "betCent_wt", ofb, propDict=propDict, append=appValW)
-    
-    closeCent = mbt.centrality.closeness_centrality(a.G, distance='distance')
-    extras.writeResults(closeCent, "closeCent_wt", ofb, propDict=propDict, append=appValW)
-    
-    eigCent = mbt.centrality.eigenvector_centrality_numpy(a.G)
-    extras.writeResults(eigCent, "eigCentNP_wt", ofb, propDict=propDict, append=appValW)
-    del(eigCent)
-    
+#    propDict = {"pcLoss":pcLoss}
+#    # weighted measures
+#
+#    a.weightToDistance()
+#    ofb = '_'.join(["brain", degenName, "d"+dVal+"_"])
+#    a.makebctmat()
+#    
+#    # weighted hub metrics
+#    degs = a.G.degree(weight='weight')
+#    extras.writeResults(degs, "degree_wt", ofb, propDict=propDict, append=appValW)
+#    
+#    betCent = mbt.centrality.betweenness_centrality(a.G, weight='distance')
+#    extras.writeResults(betCent, "betCent_wt", ofb, propDict=propDict, append=appValW)
+#    
+#    closeCent = mbt.centrality.closeness_centrality(a.G, distance='distance')
+#    extras.writeResults(closeCent, "closeCent_wt", ofb, propDict=propDict, append=appValW)
+#    
+#    eigCent = mbt.centrality.eigenvector_centrality_numpy(a.G)
+#    extras.writeResults(eigCent, "eigCentNP_wt", ofb, propDict=propDict, append=appValW)
+#    del(eigCent)
+#    
 #    # weighted modularity metrics
 #    ci = bct.modularity_louvain_und_sign(a.bctmat)
 #    Q = ci[1]
@@ -456,8 +456,8 @@ def metrics(a,
 #extras.writeResults(pcCent, "pcCentWt_wt", ofb, append=appVal)
 #    del(pcCent,ci)
 #    
-    betCentT = a.assignbctResult(mbt.np.mean(betCentT, axis=1))
-    extras.writeResults(betCentT, "betCentWtT_wt", ofb, propDict=propDict, append=appValW)
+#    betCentT = a.assignbctResult(mbt.np.mean(betCentT, axis=1))
+#    extras.writeResults(betCentT, "betCentWtT_wt", ofb, propDict=propDict, append=appValW)
 #    
 #    nM = mbt.np.mean(nM)
 #    extras.writeResults(nM, "nMWt_wt", ofb, propDict=propDict, append=appValW)
