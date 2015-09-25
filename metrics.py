@@ -7,12 +7,11 @@ from maybrain import brainObjs as mbt
 from maybrain import extraFns as extras
 import bct
 
-edgePCCons = [v for v in range(1,11)]
 def metrics(a,
             appVal,
             degenName,
             pcLoss,
-            edgePCCons = [v*0.01 for v in range(1,11)],
+            edgePCCons = [v for v in range(1,11)],
             dVal = "2",
             thresholdtype = "local"
             ):
@@ -46,7 +45,7 @@ def metrics(a,
         extras.writeResults(degs, "degreeWt", ofb, propDict=propDict,
                             append=appVal)
 
-	# weighted betweenness centrality
+	  # weighted betweenness centrality
         bcT = mbt.centrality.betweenness_centrality(a.G, weight='distance')    
         betCentT[:,n] = [bcT[v] for v in a.G.nodes()]
 
@@ -94,15 +93,15 @@ def metrics(a,
 #        wmdNm[:,n] = [wmdNmWt[v] for v in a.G.nodes()]
 #        extras.writeResults(wmdNmWt, "wmdNmWt", ofb, propDict=propDict, append=appValT)
 #        del wmdNmWt
+#
+#        appValT=True
 
-        appValT=True
-
-	# now to collect measures in a binary graph
+        # now to collect measures in a binary graph
         a.binarise()
 
         a.weightToDistance()
         a.makebctmat()
-        
+
         #### small worldness metrics ####
         degs = mbt.nx.degree(a.G)
         extras.writeResults(degs, "degree", ofb, propDict=propDict, append=appVal)
@@ -116,14 +115,14 @@ def metrics(a,
         ccNorm = extras.normaliseNodeWise(a.G, mbt.nx.clustering, inVal=cc)
         extras.writeResults(ccNorm, "ccNorm", ofb, propDict=propDict, append=appVal)
 
-        clustCoeff = np.mean(cc.values())
+        clustCoeff = mbt.np.mean(cc.values())
         extras.writeResults(clustCoeff, "clusterCoeff", ofb, propDict=propDict, append=appVal)
 
-        clustCoeffNorm = np.mean(ccNorm.values())
+        clustCoeffNorm = mbt.np.mean(ccNorm.values())
         extras.writeResults(clustCoeffNorm, "clusterCoeffNorm", ofb, propDict=propDict, append=appVal)
-            del(clustCoeff)
+        del(clustCoeff)
         del(clustCoeffNorm)
-            del(cc)
+        del(cc)
         del(ccNorm)
         
         pl = mbt.nx.average_shortest_path_length(a.G)
@@ -131,7 +130,7 @@ def metrics(a,
 
         plNorm = extras.normalise(a.G, mbt.nx.average_shortest_path_length, inVal=pl)
         extras.writeResults(plNorm, "plNorm", ofb, propDict=propDict, append=appVal)
-            del(pl)
+        del(pl)
         del(plNorm)
         
         ge = extras.globalefficiency(a.G)
@@ -139,7 +138,7 @@ def metrics(a,
 
         geNorm = extras.normalise(a.G, extras.globalefficiency, inVal=ge)
         extras.writeResults(geNorm, "geNorm", ofb, propDict=propDict, append=appVal)
-            del(ge)
+        del(ge)
         del(geNorm)
         
         le = extras.localefficiency(a.G)
@@ -147,24 +146,24 @@ def metrics(a,
 
         leNorm = extras.normaliseNodeWise(a.G, extras.localefficiency, inVal=le)
         extras.writeResults(leNorm, "leNorm", ofb, propDict=propDict, append=appVal)
-            del(le)
+        del(le)
         del(leNorm)
     
         # hub metrics
-        betCent = mbt.nx.centrality.betweenness_centrality(a.G)
-        extras.writeResults(betCent, "betCent", ofb, propDict=propDict, append=appVal)
-            
-        betCentNorm = extras.normaliseNodeWise(a.G, mbt.nx.centrality.betweenness_centrality, inVal=betCent)
-        extras.writeResults(betCentNorm, "betCentNorm", ofb, propDict=propDict, append=appVal)
-        del(betCent, betCentNorm)
-    
-        closeCent = mbt.nx.centrality.closeness_centrality(a.G)
-        extras.writeResults(closeCent, "closeCent", ofb, propDict=propDict, append=appVal)
-         
-        closeCentNorm = extras.normaliseNodeWise(a.G, mbt.nx.centrality.closeness_centrality, inVal=closeCent)
-        extras.writeResults(closeCentNorm, "closeCentNorm", ofb, propDict=propDict, append=appVal)
-        del(closeCent, closeCentNorm)
-         
+#        betCent = mbt.nx.centrality.betweenness_centrality(a.G)
+#        extras.writeResults(betCent, "betCent", ofb, propDict=propDict, append=appVal)
+#            
+#        betCentNorm = extras.normaliseNodeWise(a.G, mbt.nx.centrality.betweenness_centrality, inVal=betCent)
+#        extras.writeResults(betCentNorm, "betCentNorm", ofb, propDict=propDict, append=appVal)
+#        del(betCent, betCentNorm)
+#    
+#        closeCent = mbt.nx.centrality.closeness_centrality(a.G)
+#        extras.writeResults(closeCent, "closeCent", ofb, propDict=propDict, append=appVal)
+#         
+#        closeCentNorm = extras.normaliseNodeWise(a.G, mbt.nx.centrality.closeness_centrality, inVal=closeCent)
+#        extras.writeResults(closeCentNorm, "closeCentNorm", ofb, propDict=propDict, append=appVal)
+#        del(closeCent, closeCentNorm)
+
         try:
             eigCent = mbt.nx.centrality.eigenvector_centrality_numpy(a.G)
         except:
@@ -182,47 +181,40 @@ def metrics(a,
         extras.writeResults(eln, "eln", ofb, propDict=propDict, append=appVal)
 
         elnNorm = {v:[] for v in a.G.nodes()}
-        for i in range(500):
-            rand = mbt.nx.configuration_model(a.G.degree().values())
-            rand = mbt.nx.Graph(rand) # convert to simple graph from multigraph
-            mbt.nx.set_node_attributes(rand, 'xyz', {rn:a.G.node[v]['xyz'] for rn,v in enumerate(a.G.nodes())}) # copy across spatial information
-            res = extras.edgeLengths(rand, nodeWise=True)
-            
-            for x,node in enumerate(elnNorm):
-                elnNorm[node].append(res[x])
-
-        for node in elnNorm:
-            elnNorm[node] = eln[node]/np.mean(elnNorm[node])
-        
-        
-        extras.writeResults(elnNorm, "elnNorm", ofb, propDict=propDict, append=appVal)
-        del(eln, elnNorm)
-        
+        elNorm = []
         el = extras.edgeLengths(a.G)
         meanEL = mbt.np.mean(mbt.np.array((el.values()), dtype=float))
         extras.writeResults(meanEL, "meanEL", ofb, propDict=propDict,
                             append=appVal)
     
-        elNorm = []
-    
         for i in range(500):
             rand = mbt.nx.configuration_model(a.G.degree().values())
             rand = mbt.nx.Graph(rand) # convert to simple graph from multigraph
             mbt.nx.set_node_attributes(rand, 'xyz', {rn:a.G.node[v]['xyz'] for rn,v in enumerate(a.G.nodes())}) # copy across spatial information
+            res = extras.edgeLengths(rand, nodeWise=True)
             elNorm.extend([v for v in extras.edgeLengths(rand).values()])
-    
-        meanEL = np.mean(np.array((el.values()), dtype=float))
-        meanELNorm = np.mean(np.array((elNorm), dtype=float))
+            
+            for x,node in enumerate(elnNorm):
+                elnNorm[node].append(res[x])
+
+        for node in elnNorm:
+            elnNorm[node] = eln[node]/mbt.np.mean(elnNorm[node])
+        
+        extras.writeResults(elnNorm, "elnNorm", ofb, propDict=propDict, append=appVal)
+        del(eln, elnNorm)
+        
+        meanEL = mbt.np.mean(mbt.np.array((el.values()), dtype=float))
+        meanELNorm = mbt.np.mean(mbt.np.array((elNorm), dtype=float))
         extras.writeResults(meanEL, "meanEL", ofb, propDict=propDict, append=appVal)
         extras.writeResults(meanELNorm, "meanELNorm", ofb, propDict=propDict, append=appVal)
     
-        medianEL = np.median(np.array((el.values()), dtype=float))
-        medianELNorm = np.median(np.array((elNorm), dtype=float))
+        medianEL = mbt.np.median(mbt.np.array((el.values()), dtype=float))
+        medianELNorm = mbt.np.median(mbt.np.array((elNorm), dtype=float))
         extras.writeResults(medianEL, "medianEL", ofb, propDict=propDict, append=appVal)
         extras.writeResults(medianELNorm, "medianELNorm", ofb, propDict=propDict, append=appVal)
         
         del(el, elNorm, meanEL, meanELNorm, medianEL, medianELNorm)
-        
+
 #        # modularity metrics
 #        ci = bct.modularity_louvain_und(a.bctmat)
 #        Q = ci[1]
@@ -326,24 +318,24 @@ def metrics(a,
 #extras.writeResults(le, "le_wt", ofb, append=appVal)
 #del(le)
 #
-#pcCent = np.zeros((len(a.G.nodes()), 10))
-#betCentT = np.zeros((len(a.G.nodes()), 10))
-#cc = np.zeros((len(a.G.nodes()), 10))
+#pcCent = mbt.np.zeros((len(a.G.nodes()), 10))
+#betCentT = mbt.np.zeros((len(a.G.nodes()), 10))
+#cc = mbt.np.zeros((len(a.G.nodes()), 10))
 #
-#nM = np.zeros((10))
-##clustCoeff = np.zeros((10))
-#wmd = np.zeros((len(a.G.nodes()), 10))
-#Q = np.zeros((10))
+#nM = mbt.np.zeros((10))
+##clustCoeff = mbt.np.zeros((10))
+#wmd = mbt.np.zeros((len(a.G.nodes()), 10))
+#Q = mbt.np.zeros((10))
 #
-#pcCentIM = np.zeros((len(a.G.nodes()), 10))
-#nMIM = np.zeros((10))
-#wmdIM = np.zeros((len(a.G.nodes()), 10))
-#QIM = np.zeros((10))
+#pcCentIM = mbt.np.zeros((len(a.G.nodes()), 10))
+#nMIM = mbt.np.zeros((10))
+#wmdIM = mbt.np.zeros((len(a.G.nodes()), 10))
+#QIM = mbt.np.zeros((10))
 #
-#pcCentNm = np.zeros((len(a.G.nodes()), 10))
-#nMNm = np.zeros((10))
-#wmdNm = np.zeros((len(a.G.nodes()), 10))    
-#QNm = np.zeros((10))
+#pcCentNm = mbt.np.zeros((len(a.G.nodes()), 10))
+#nMNm = mbt.np.zeros((10))
+#wmdNm = mbt.np.zeros((len(a.G.nodes()), 10))    
+#QNm = mbt.np.zeros((10))
 #
 #appValT=False
 #
@@ -364,7 +356,7 @@ def metrics(a,
 #    extras.writeResults(ciN, "ciWt", ofbT, propDict=propDict, append=appValT)
 #    del QWt
 #    
-#    nMWt = len(np.unique(ci[0]))
+#    nMWt = len(mbt.np.unique(ci[0]))
 #    nM[n] = nMWt
 #    extras.writeResults(nMWt, "nMWt", ofbT, propDict=propDict, append=appValT)
 #    del(nMWt)
@@ -394,7 +386,7 @@ def metrics(a,
 #    extras.writeResults(ciNIM, "ciIMWt", ofbT, propDict=propDict, append=appValT)
 #    del(QIMWt)
 #    
-#    nMIMWt = len(np.unique(modules))
+#    nMIMWt = len(mbt.np.unique(modules))
 #    nMIM[n] = nMIMWt
 #    extras.writeResults(nMIMWt, "nMIMWt", ofbT, propDict=propDict, append=appValT)
 #    del(nMIMWt)
@@ -418,7 +410,7 @@ def metrics(a,
 #    extras.writeResults(QNmWt, "QNmWt", ofbT, propDict=propDict, append=appValT)
 #    extras.writeResults(ciNNm, "ciNmWt", ofbT, propDict=propDict, append=appValT)  
 #    
-#    nMNmWt = len(np.unique(ciNm[0]))
+#    nMNmWt = len(mbt.np.unique(ciNm[0]))
 #    nMNm[n] = nMNmWt
 #    extras.writeResults(nMNmWt, "nMNmWt", ofbT, propDict=propDict, append=appValT)
 #    del(nMNmWt)
@@ -437,7 +429,7 @@ def metrics(a,
 #    cc[:,n]  = [ccWt[v] for v in a.G.nodes()]
 #    extras.writeResults(ccWt, "ccWt", ofbT, propDict=propDict, append=appValT)
 #    
-#    clustCoeffWt = np.average(ccWt.values())
+#    clustCoeffWt = mbt.np.average(ccWt.values())
 #    clustCoeff[n] = clustCoeffWt
 #    extras.writeResults(clustCoeffWt, "clustCoeffWt", ofbT, propDict=propDict, append=appValT)
 #    del(clustCoeffWt)
@@ -448,11 +440,11 @@ def metrics(a,
 #    appValT=True
 #    
 #    
-#Q = np.mean(Q)
+#Q = mbt.np.mean(Q)
 #extras.writeResults(Q, "QWt_wt", ofb, append=appVal)
 #del(Q)
 #
-#pcCent = a.assignbctResult(np.mean(pcCent, axis=1))
+#pcCent = a.assignbctResult(mbt.np.mean(pcCent, axis=1))
 #extras.writeResults(pcCent, "pcCentWt_wt", ofb, append=appVal)
 #    del(pcCent,ci)
 #    
@@ -483,4 +475,4 @@ def metrics(a,
 #    nMNm = mbt.np.mean(nMNm)
 #    extras.writeResults(nMNm, "nMNmWt_wt", ofb, append=appValW)
 #    del(nMNm)
-    a.adjMatThresholding(MST=False)
+    a.applythreshold()

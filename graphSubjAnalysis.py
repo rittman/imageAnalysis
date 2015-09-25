@@ -138,7 +138,6 @@ for e in edgePCCons:
     for node in elnNorm:
         elnNorm[node] = eln[node]/np.mean(elnNorm[node])
     
-    
     extras.writeResults(elnNorm, "elnNorm", ofb, propDict=propDict, append=appVal)
     del(eln, elnNorm)
     
