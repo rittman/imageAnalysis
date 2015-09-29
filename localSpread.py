@@ -5,22 +5,19 @@ Created on Tue Jan 28 23:35:36 2014
 @author: tim
 """
 
-from maybrain import mayBrainTools as mbt
-from maybrain import mayBrainExtraFns as extras
-from copy import deepcopy
+from maybrain import brainObjs as mbt 
 from datetime import datetime
-from random import choice
 from metrics import metrics
-import bct
+from random import choice
 
 startTime = datetime.now()
 nodesToExclude = [28, 303, 355, 339, 131, 250, 491, 205, 423, 140, 434, 142, 235, 244, 493, 21, 26, 232, 76, 234, 422]
 
-parcelFile = "parcel_500_xyz.txt"
+parcelFile = "parcel_500.txt"
 degenName = "localSpread"
 dVal = "2"
 thresholdtype = "local"
-am = "wave_cor_mat_level_"+dVal+"d_500.txt"
+am = "wave_cor_mat_level_"+dVal+"d_500_z.txt"
 
 a = mbt.brainObj()
 a.importAdjFile(am, exclnodes=nodesToExclude)
@@ -32,8 +29,7 @@ a.importSpatialInfo(parcelFile)
 weights = [mbt.np.absolute(a.G.edge[v[0]][v[1]]['weight']) for v in a.G.edges() ]
 
 T_start = mbt.np.sum(weights)
-print T_start
-wtLossPC = 5
+wtLossPC = 5.
 wtLoss = T_start * (wtLossPC/100)
 
 appVal = False
@@ -45,13 +41,15 @@ for n in range(1,11):
     print "doing degenerative process"
     increment = wtLoss/10
     trackWtLoss = wtLoss
-    while trackWtLoss>0.001:  # just above 0 to cope with issues of defining 0
-        a.degenerate(weightloss=0.05, weightLossLimit=increment, toxicNodes=badNodes)
-        
+    while trackWtLoss>0.:  # just above 0 to cope with issues of defining 0
+        a.degenerate(weightloss=0.05, weightLossLimit=increment, nodeList=badNodes)
         allNodes = [ v for v in a.G.nodes() if not v in badNodes ]
-        badNodes.append(a.findSpatiallyNearest([choice(badNodes)], allNodes))      
+        badNodes.append(a.findSpatiallyNearest(badNodes))
         trackWtLoss-=increment
     
+    a.reconstructAdjMat()
+    print "getting metrics"
+
     metrics(a, appVal, degenName, pcLoss=str(wtLossPC))
     appVal = True
     

@@ -6,9 +6,7 @@ Created on Tue Jan 28 23:35:36 2014
 """
 
 from maybrain import brainObjs as mbt 
-from maybrain import extraFns as extras
 from datetime import datetime
-import bct
 from metrics import metrics
 
 startTime = datetime.now()
