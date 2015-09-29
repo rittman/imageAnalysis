@@ -29,6 +29,9 @@ def metrics(a,
 #    nMNm = mbt.np.zeros((10))
 #    wmdNm = mbt.np.zeros((len(a.G.nodes()), 10))    
 #    QNm = mbt.np.zeros((10))
+                 
+    # list of all nodes present at the beginning in case they're lost later
+    allNodes = [v for v in a.G.nodes()]
 
     # unweighted measures
     for n,e in enumerate(edgePCCons):
@@ -46,8 +49,8 @@ def metrics(a,
                             append=appVal)
 
 	  # weighted betweenness centrality
-        bcT = mbt.centrality.betweenness_centrality(a.G, weight='distance')    
-        betCentT[:,n] = [bcT[v] for v in a.G.nodes()]
+        bcT = mbt.centrality.betweenness_centrality(a.G, weight='distance')
+        betCentT[:,n] = [bcT[v] if v in a.G.nodes() else mbt.np.nan for v in allNodes]
 
 #        # weighted modularity metrics
 #        ci = bct.modularity_louvain_und_sign(a.bctmat)
