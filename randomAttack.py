@@ -29,7 +29,8 @@ weights = [mbt.np.absolute(a.G.edge[v[0]][v[1]]['weight']) for v in a.G.edges() 
 
 T_start = mbt.np.sum(weights)
 print T_start
-wtLoss = T_start * 0.001
+wtLossPC = 5. # five percent loss of connections at each iteration
+wtLoss = T_start * (wtLossPC/100)
 
 appVal = False
 
@@ -38,7 +39,7 @@ for n in range(1,11):
     a.degenerate(weightloss=0.05, weightLossLimit=wtLoss)
     a.reconstructAdjMat()
     print "getting metrics"
-    metrics(a, appVal, degenName, pcLoss=str(n*5))  # something in the metrics is reinstating too many edges, including node 0 connected to everything
+    metrics(a, appVal, degenName, pcLoss=str(wtLossPC))  # something in the metrics is reinstating too many edges, including node 0 connected to everything
     appVal = True
     
 # total weights
