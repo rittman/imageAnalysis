@@ -6,7 +6,6 @@ File for creating a mean association matrix.
 Instructions:
 1. define the list of filenames on line 18
 2. run this script
-3. run doMean.py
 
 @author: tim
 """
@@ -18,10 +17,10 @@ from glob import glob
 from shutil import rmtree
 
 
-def meanMatrix(dg, nP, fNames=None):
+def meanMatrix(nP, fNames=None):
     # define the list of association matrix files to use here
     if not fNames:
-        fNames = glob(path.join(dg, "*/wave_cor_mat_level_2d_"+str(nP)+"_z.txt"))
+        fNames = glob("*/wave_cor_mat_level_2d_"+str(nP)+"_z.txt")
     
     # iterate through each node setting up a directory
     for i in range(nP):
@@ -63,7 +62,7 @@ def meanMatrix(dg, nP, fNames=None):
     # collate the matrices
     dirNames = ["dir_"+str(v) for v in range(nP)]
     
-    f = open(path.join(dg,"mean_"+str(nP)+".txt"),"w")
+    f = open("mean_"+str(nP)+".txt","w")
     for dirName in dirNames:
         print dirName
         g = open(path.join(dirName,"meanValues.txt"))
@@ -74,13 +73,13 @@ def meanMatrix(dg, nP, fNames=None):
         
     f.close()
 
-nP=500
-for dg in ["Control", "PD", "PSP", "CBS"]:
-    meanMatrix(dg, nP=nP)
-    
-f = open("ControlLog.txt", "rb")
-fNameDict = {l.split()[0]:[v.replace(str(500), str(nP)) for v in l.split()[1:]] for l in f.readlines()}
-f.close()
 
-for dg in fNameDict.keys():
-    meanMatrix("Control"+dg, nP=nP, fNames = fNameDict[dg])
+nP=500
+
+f = open("../genfi_Subjects_sjones_1_22_2015_17_47_47_restructure_summary.csv")
+fDict = csv.DictReader(f, delimiter='\t')
+Controls = [v['Subject'] for v in fDict if v['GS']=="0"]
+fNames = [path.join(v,"wave_cor_mat_level_2d_"+str(nP)+"_z.txt") for v in Controls]
+fNames = [v for v in fNames if path.exists(v)]
+
+meanMatrix(nP=nP, fNames=fNames)

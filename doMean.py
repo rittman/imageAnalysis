@@ -5,6 +5,8 @@ Run this script after meanMatrices.py
 This script collates the means for individuals nodes in to
 a single association matrix
 
+OBSOLETE SCRIPT - NOW THIS FUNCTION IS DONE IN MEANMATRICES.PY
+
 @author: tim
 """
 

@@ -70,32 +70,32 @@ class metricObj:
                         eH = split(fName, sep="_")[2]
                                     
                     # assign values to output dictionary
-                    for l in reader:
-                        l["edgePC"] = eH
-                        l["site"]   = subjDict[subj]["Site"]
-                        l["wbic"]   = path.basename(subj)
-                        l["gene"]   = subjDict[subj]["gene"]
-                        l["GS"]     = subjDict[subj]["GS"]
-                        l["Family"] = subjDict[subj]["Family"]
+                    l = reader.next()  # only take the first value, to avoid double counting where two values were recorded
+                    l["edgePC"] = eH
+                    l["site"]   = subjDict[subj]["Site"]
+                    l["wbic"]   = path.basename(subj)
+                    l["gene"]   = subjDict[subj]["gene"]
+                    l["GS"]     = subjDict[subj]["GS"]
+                    l["Family"] = subjDict[subj]["Family"]
+                    
+                    if not o.fieldnames:
+                        headers = ["wbic", "gene", "GS", "site", "Family"]
+                        headNum = len(headers)+2
+                        headers.extend(reader.fieldnames)
+                        if not 'edgePC' in headers:
+                            headers.insert(0, 'edgePC')
                         
-                        if not o.fieldnames:
-                            headers = ["wbic", "gene", "GS", "site", "Family"]
-                            headNum = len(headers)+2
-                            headers.extend(reader.fieldnames)
-                            if not 'edgePC' in headers:
-                                headers.insert(0, 'edgePC')
-                            
-                            
-                            if len(headers) > headNum:
-                                headers = headers[:headers.index('0')]
-                                headers.extend([str(v) for v in range(500)])
-                            
-                            o.fieldnames = headers
-                            o.writeheader()
-                        for h in headers:
-                            if not h in l.keys():
-                                l[h] = "NA"
-                        o.writerow(l)
+                        
+                        if len(headers) > headNum:
+                            headers = headers[:headers.index('0')]
+                            headers.extend([str(v) for v in range(500)])
+                        
+                        o.fieldnames = headers
+                        o.writeheader()
+                    for h in headers:
+                        if not h in l.keys():
+                            l[h] = "NA"
+                    o.writerow(l)
                     f.close()
                 except IOError:
                     print ' '.join([subj, fName])

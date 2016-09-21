@@ -34,7 +34,7 @@ wtLoss = T_start * (wtLossPC/100)
 
 appVal = False
 
-for n in range(1,11):
+for n in range(3,4):
     print "doing degenerative process"
     a.degenerate(weightloss=0.05, weightLossLimit=wtLoss)
     a.reconstructAdjMat()
