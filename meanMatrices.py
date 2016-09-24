@@ -79,7 +79,12 @@ nP=500
 f = open("../genfi_Subjects_sjones_1_22_2015_17_47_47_restructure_summary.csv")
 fDict = csv.DictReader(f, delimiter='\t')
 Controls = [v['Subject'] for v in fDict if v['GS']=="0"]
+exclList = ["C9ORF005","C9ORF015", "GRN022", "GRN041", "GRN053", "GRN059"]
+for e in exclList:
+    if e in Controls:
+        Controls.remove(e)
 fNames = [path.join(v,"wave_cor_mat_level_2d_"+str(nP)+"_z.txt") for v in Controls]
 fNames = [v for v in fNames if path.exists(v)]
+f.close()
 
 meanMatrix(nP=nP, fNames=fNames)
