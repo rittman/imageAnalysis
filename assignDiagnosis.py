@@ -9,7 +9,7 @@ from shutil import move
 input = "Query11.csv"
 
 f = open(input, "r") # define the input file
-root = "/home/tr332/scratch/functional"
+root = "/home/tr332/scratch/newDownloads"
 
 reader = csv.DictReader(f, delimiter=",") # read the input file
 
@@ -21,7 +21,7 @@ for r in reader:
    if r["Current Diagnosis"] == "Control":
       Control.append(r["WBIC Number"])
 
-   elif r["Current Diagnosis"] == "PSP" or r["Current Diagnosis"]=="PSP-clinical":
+   elif r["Current Diagnosis"] == "PSP" or r["Current Diagnosis"]=="PSP-clinical" or r["Current Diagnosis"] == "PAGF/PSP":
       PSP.append(r["WBIC Number"])
 
 print ' '.join(["Control", str(len(Control))])
