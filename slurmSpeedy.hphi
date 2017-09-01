@@ -29,7 +29,7 @@
 #! What e-mail address to use for notifications?
 #! Insert your mail address here for job notifications
 #! Remove the ! to uncomment
-#! SBATCH --mail-user=
+# SBATCH --mail-user=tr332@medschl.cam.ac.uk
 
 #! What types of email messages do you wish to receive?
 #! Remove the ! to uncomment
