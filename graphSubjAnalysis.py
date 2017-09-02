@@ -7,6 +7,7 @@ from maybrain import brainObjs as mbt
 from maybrain import extraFns as extras
 import bct
 import numpy as np
+#from infomap import infomap
 
 edgePCCons = [v for v in range(1,11)]
 

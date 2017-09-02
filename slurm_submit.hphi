@@ -10,7 +10,7 @@
 
 #! sbatch directives begin here ###############################
 #! Name of the job: speedy
-#SBATCH -J scriptAPreprocessing
+#SBATCH -J waveletDespiking
 
 #! Which project should jobs run under:
 #SBATCH -A hphi
@@ -57,7 +57,7 @@ module load default-wbic                   # REQUIRED - loads the basic environm
 #! Insert additional module load commands after this line if needed:
 
 #! Full path to your application executable: 
-application="/home/tr332/scratch/functional/scriptA.sh"
+application="/home/tr332/scratch/functional/doDespiking.sh"
 
 #! Run options for the application:
 options=""
