@@ -25,7 +25,7 @@ for d in diagList: #for loop for d. d is either control or PD as a result.
 		for condition in subdirectory: #now we're going into the condition folder where ultimately we'll be able to find the original spike percentage text which tells us the spike percentage for each frame of the scan. There shouldn't be more than one folder per subject though
 			try:
 				chdir(path.join(mainDir, d, WBIC, condition, 'preprocessing'))
-				SP = open(WBIC+'_functional_SP.txt','r') #this is opening the text file with the spike percentage information for each frame. 'r' means that we're reading from the file as oppossed to writing to it as we are doing with the SPmedian text file. 	
+				SP = open('FUNCTIONAL_SP.txt','r') #this is opening the text file with the spike percentage information for each frame. 'r' means that we're reading from the file as oppossed to writing to it as we are doing with the SPmedian text file. 	
 				SPlist = [float(v.rstrip('\n')) for v in SP.readlines()]
 				mu = median(SPlist) #this is calculating the median of spike percentages for each frame in the scan
 				list.append(mu) #we are appending the median value to the list which we created earlier, so each time it goes through this loop with different scans it always adds the median to the end of the list. 
@@ -34,6 +34,7 @@ for d in diagList: #for loop for d. d is either control or PD as a result.
 				SPmedian.writelines('\t'.join([WBIC,d,condition,str(mu)+'\n'])) #this writes each rowe of our new SPmedian text file. first column wbic number, then tab, then condition, then tab, then median, then new line which is indicated with '\n'. 
 			except: #this is here because some participants have folders for a specific scan condition however the functional data isn't there so we obviously don't have the spike percentage data for them. if this is the case, the following error message will appear:
 				print 'something is wrong with this participant - potentially no functional scan'
+		chdir(mainDir)
 	arr = array(list)
 	print d + ": spike threshold of 10%"
 	print (float(len(arr[arr>10])) / len(arr)) * 100
