@@ -3,13 +3,13 @@ from os import path, chmod, system
 from sys import argv
 from itertools import repeat
 
-FSLDIR="/app/fsl/fsl-5.0.0/bin"
+FSLDIR="/applications/fsl/fsl-5.0.10/bin"
 
 # define infiles and outfiles
-fScan = argv[1]
-mask1 = argv[2]
-mask2 = argv[3]
-x = argv[4]
+fScan = argv[1] # functional scan
+mask1 = argv[2] # 
+#mask2 = argv[3]
+x = argv[3]
 ind = "ind"+str(x)+'.nii.gz'
 pf = "parcelMean.txt"
 tf = "tempScript.sh"
@@ -31,7 +31,7 @@ l = []
 l.append(' '.join([path.join(FSLDIR, "fslchfiletype"), "NIFTI_GZ", parcel]))
 parcel = parcel+'.gz'
 
-l.append(' '.join([path.join(FSLDIR, "fslmaths"), parcel, "-mas", mask1, "-mas", mask2, parcel]))
+l.append(' '.join([path.join(FSLDIR, "fslmaths"), parcel, "-mas", mask1, parcel]))
 t = open(tf,"w")
 t.writelines('\n'.join(l))
 t.close()
