@@ -10,7 +10,7 @@
 
 #! sbatch directives begin here ###############################
 #! Name of the job: speedy
-#SBATCH -J scriptA 
+#SBATCH -J runParcellate_withgrid.sh 
 
 #! Which project should jobs run under:
 #SBATCH -A hphi
