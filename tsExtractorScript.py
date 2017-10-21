@@ -15,7 +15,7 @@ pf = "parcelMean.txt"
 tf = "tempScript.sh"
 numCols=None
 
-parcel = "/home/tr332/fmri_spt/templates/parcel_temps/parcel_"+x+".nii"
+parcel = "/home/tr332/fmri_spt_wav/templates/parcel_temps/parcel_"+x+".nii"
 outfile = fScan.replace(".nii.gz", x+"_ts.txt")
 
 # copy parcel file locally
