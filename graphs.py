@@ -8,16 +8,16 @@ The input is a timeseries file.
 
 import csv,os,glob,shutil,operator
 import numpy as np
-import rpy2
-from rpy2.robjects.packages import importr
+import rpy
+from rpy.robjects.packages import importr
 import matplotlib as mp
 from matplotlib import pyplot
-import rpy2.robjects.numpy2ri
+import rpy.robjects.numpy2ri
 from nitime import viz
 from pylab import *
 from operator import itemgetter
 
-rpy2.robjects.numpy2ri.activate()
+rpy.robjects.numpy2ri.activate()
 brainwaver = importr("brainwaver")
 base = importr("base")
 utils = importr("utils")
@@ -33,6 +33,16 @@ cdict = {'red': ((0.0, 1.0, 1.0),
                   (1.0, 0.0, 0.0))}
 my_cmap = mp.colors.LinearSegmentedColormap('my_colormap',cdict,256)
 
+def columnise(tsFile):
+	a = np.genfromtxt(tsFile, missing_values="NA", filling_values=None)
+	outfile = tsFile.replace('.txt', '_col.txt')
+	f = open(outfile, "w")
+	
+	for i in range(a.shape[1]):
+		f.writelines(' '.join([ str(v) if str(v) != 'nan' else 'NA' for v in a[:,i]]) + '\n')
+	f.close()
+	return(outfile)
+	
 class individual:
     def __init__ (self, filename, diag=None):
         if diag:
@@ -108,3 +118,25 @@ class individual:
                         print "moved "+newfile+" to "+newfile+".old"
     
 
+
+#get current directory
+subj = os.getcwd()
+
+# define WBIC number
+WBICNum = path.basename(path.split(subj)[0])
+cond = path.basename(subj)
+print WBICNum
+print cond
+
+# iterate through parcel files
+for ROInum in ROInums:
+	parcelFile = "FUNCTIONAL_ppm_std_2mm_"+ROInum+"_ts.txt"
+	print subj + ' '+parcelFile
+	
+		
+	# columnise timeseries
+	ts = columnise(parcelFile)
+	
+	# perform wavelet analysis
+	a = graphs.individual(ts)
+	a.waveletDecomp()

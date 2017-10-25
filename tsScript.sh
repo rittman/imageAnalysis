@@ -53,8 +53,7 @@ for x in 100 200 300 400 500 ; do
 
   else
    line=`fslmeants -i $func -m $ind --transpose`
-   set -- $line
-   len=${#line[@]}
+   len=`wc -w <<< $line`
    
    echo "Not enough voxels"
    echo `yes "NA" | head -n $len` >> $outFile
