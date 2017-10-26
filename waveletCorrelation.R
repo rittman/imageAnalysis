@@ -7,7 +7,7 @@ doFtoZ <- function(x,adjMat){
  for(x in seq(length(rho[1,]))){
   for(y in seq(length(rho[,1]))){
    if(x == y){
-    aa[x,y] = NA
+    rho[x,y] = NA
    }
   }
  }
