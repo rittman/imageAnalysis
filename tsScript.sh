@@ -6,19 +6,19 @@ tsScript=/home/tr332/imageAnalysis/tsExtractorScript.py
 parcelDir=/home/tr332/fmri_spt_wav/templates/parcel_temps
 export FSLOUTPUTTYPE=NIFTI_GZ
 
-fslchfiletype NIFTI_GZ $func
-mv $func ${func/.nii/.nii.old}
-fslchfiletype NIFTI_GZ $struc
-rm $struc
-echo downsampling functional image
-flirt -in DATA_do_std.nii.gz -ref ${FSLDIR}/data/standard/MNI152_T1_2mm.nii.gz -omat toMNI.mat
-flirt -in FUNCTIONAL_ppm_std.nii.gz -ref ${FSLDIR}/data/standard/MNI152_T1_2mm_brain.nii.gz -applyxfm -init toMNI.mat -out FUNCTIONAL_ppm_std_2mm.nii.gz
+#fslchfiletype NIFTI_GZ $func
+#mv $func ${func/.nii/.nii.old}
+#fslchfiletype NIFTI_GZ $struc
+#rm $struc
+#echo downsampling functional image
+#flirt -in DATA_do_std.nii.gz -ref ${FSLDIR}/data/standard/MNI152_T1_2mm.nii.gz -omat toMNI.mat
+#flirt -in FUNCTIONAL_ppm_std.nii.gz -ref ${FSLDIR}/data/standard/MNI152_T1_2mm_brain.nii.gz -applyxfm -init toMNI.mat -out FUNCTIONAL_ppm_std_2mm.nii.gz
 func=FUNCTIONAL_ppm_std_2mm.nii.gz
-echo "Creating mean functional image"
-fslmaths $func -Tmean ${func/.nii.gz/_mean.nii.gz}
-echo "Creating functional mask"
+#echo "Creating mean functional image"
+#fslmaths $func -Tmean ${func/.nii.gz/_mean.nii.gz}
+#echo "Creating functional mask"
 mask=${func/.nii.gz/_mask.nii.gz}
-fslmaths ${func/.nii.gz/_mean.nii.gz} -mul ${func/.nii.gz/_mean.nii.gz} -bin $mask
+#fslmaths ${func/.nii.gz/_mean.nii.gz} -mul ${func/.nii.gz/_mean.nii.gz} -bin $mask
 echo "Removing existing parcellation templates"
 rm parcel_*
 for x in 100 200 300 400 500 ; do

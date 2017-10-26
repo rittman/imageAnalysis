@@ -45,5 +45,5 @@ rtoz <- function(dName, wf="wave_cor_mat_level_2d_500.txt"){
 }
 
 # set the list of diagnoses, the script below searches recursively for directories within each diagnosis directory
-print(list.dirs())
-lapply(list.dirs(), rtoz)
+#print(list.dirs())
+#lapply(list.dirs(), rtoz)
