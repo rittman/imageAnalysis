@@ -11,7 +11,7 @@ import numpy as np
 import csv
 import nibabel as nb
 
-parcelFile = "parcels/parcel_300.nii"
+parcelFile = "parcels/parcel_500.nii"
 AALFile = "aal/ROI_MNI_V5.nii"
 AALtext = "aal/ROI_MNI_V5.txt"
 lobeFile = "aal/lobeList.csv"
@@ -24,13 +24,16 @@ def match(region,AALData,pData,AALlabels):
     """
     intArr = np.where(pData==region, AALData, 0.) # mask the AAL data by the fMRI region
     intUnique = np.unique(intArr) # get the unique AAL regions within the fMRI region
-    intUnique = intUnique[intUnique!=0.] # remove zeros
-    intDict = {v:len(intArr[intArr==v]) for v in intUnique} # dictionary of the size of each AAL region
-    v = intUnique[0]
-    for i in intDict.keys():
-        if intDict[i] > intDict[v]:
-            v=i
-    return(AALlabels[str(int(i))]['Anatomical label']) # look up the AAL region in the anatomical labels dictionary
+    if intUnique.any():
+        intUnique = intUnique[intUnique!=0.] # remove zeros
+        intDict = {v:len(intArr[intArr==v]) for v in intUnique} # dictionary of the size of each AAL region
+        v = intUnique[0]
+        for i in intDict.keys():
+            if intDict[i] > intDict[v]:
+                v=i
+        return(AALlabels[str(int(i))]['Anatomical label']) # look up the AAL region in the anatomical labels dictionary
+    else:
+        return('None')
             
 
 # import parcellation file and extract data as a matrix
