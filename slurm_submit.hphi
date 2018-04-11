@@ -21,7 +21,8 @@
 #! How much resource should be allocated?
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=50000
 
 #! How much wall-clock time will be required?
 #SBATCH --time=2-00:00:00
