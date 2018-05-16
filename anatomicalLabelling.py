@@ -11,7 +11,7 @@ import numpy as np
 import csv
 import nibabel as nb
 
-parcelFile = "parcels/parcel_500.nii"
+parcelFile = "parcel_500.nii"
 AALFile = "aal/ROI_MNI_V5.nii"
 AALtext = "aal/ROI_MNI_V5.txt"
 lobeFile = "aal/lobeList.csv"

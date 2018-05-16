@@ -6,7 +6,7 @@ from os import chdir,getcwd,listdir,path #this imports chdir, whic is the equiva
 from numpy import median,array
 import os
 
-diagList = ["Control", "PSP"]
+diagList = ["Control", "PD"]
 
 list = [] #creating an empty list here which we are going to use later in the script. 
 mainDir = getcwd()
